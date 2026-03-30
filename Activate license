@@ -1,0 +1,97 @@
+Activation of Remote Desktop License Server – Detailed Explanation (Exam-Oriented, Based on Microsoft Article)
+Remote Desktop Licensing is a critical part of Remote Desktop Services (RDS) provided by Microsoft. According to the Microsoft Learn article, before a license server can issue licenses (CALs) to users or devices, it must be activated. Activation connects the server with Microsoft systems and enables it to distribute licenses properly.
+1. What is License Server Activation?
+Activation of a Remote Desktop License Server is the process of registering the server with Microsoft so that it can:
+Issue Client Access Licenses (CALs) to users/devices
+Communicate securely with Microsoft systems
+Manage and track license usage
+ Without activation, the license server cannot issue permanent licenses and will not function properly.
+2. Purpose of Activating License Server
+To enable the server to issue licenses (CALs)
+To establish a secure connection with Microsoft Clearinghouse
+To allow installation and management of licenses
+To ensure legal and authorized usage of RDS
+ After activation, the license server becomes a registered authority for managing licenses.
+3. Prerequisites for Activation (As per Microsoft Article)
+Before activating the license server, the following conditions must be fulfilled:
+1. Windows Server with Licensing Role Installed
+The Remote Desktop Licensing role must already be installed
+Licensing tools should also be available
+2. Administrative Permissions
+The user performing activation must have administrator rights
+3. Basic Knowledge of RDS Licensing
+Understanding of CALs and licensing types is required
+4. Company Information
+Details such as name, organization, and region must be provided during activation
+ These prerequisites ensure a smooth and successful activation process.
+4. Methods to Activate License Server
+Microsoft provides three methods to activate the Remote Desktop License Server:
+1. Automatic Connection (Recommended Method)
+Description
+The server connects directly to Microsoft over the internet
+How it Works
+Uses secure communication (TCP port 443)
+Activation is completed automatically through the wizard
+Advantages
+Fast and simple
+Most commonly used method
+Use Case
+Organizations with internet access on the server can activate quickly without manual steps
+This is the recommended method by Microsoft.
+2. Web Browser Method
+Description
+Used when the server does not have internet access
+How it Works
+Administrator copies a URL from the Licensing Manager
+Opens it on another system with internet
+Completes activation online and enters the ID back
+Advantages
+Useful for restricted environments
+Use Case
+Secure environments where servers are isolated from the internet
+ Allows activation even without direct server connectivity.
+3. Telephone Method
+Description
+Activation is done by calling Microsoft support
+How it Works
+Administrator contacts Microsoft Clearinghouse
+Provides required details
+Receives activation ID
+Advantages
+Works without internet
+Use Case
+Offline environments with no internet access
+ Used as an alternative when other methods are not possible.
+5. Steps to Activate License Server (Simplified Flow)
+Step 1: Open Licensing Manager
+Go to Server Manager → Tools → Remote Desktop Licensing Manager
+Step 2: Start Activation Wizard
+Right-click server → Select “Activate Server”
+Step 3: Choose Activation Method
+Automatic / Web / Telephone
+Step 4: Enter Company Information
+Name, organization, country, etc.
+Step 5: Complete Wizard
+Follow instructions until activation is finished
+Step 6: Install Licenses (CALs)
+After activation, install purchased licenses
+ Activation is completed using the Activate Server Wizard.
+6. What Happens After Activation?
+License server becomes fully functional
+You can install and manage RDS CALs
+Server can issue licenses to users/devices
+Secure communication with Microsoft is established
+ After activation, the server acts as a license registrar.
+7. Important Concept – Temporary Licenses
+Before activation, the server may issue temporary licenses
+These are valid only for a limited time
+Permanent operation requires full activation
+ Temporary licenses allow short-term usage until activation is complete.
+8. Real-Life Use Case
+Example Scenario
+A company sets up Remote Desktop Services for employees:
+Installs RD Licensing role
+Activates license server using automatic method
+Installs CALs
+Employees connect and receive licenses
+Without activation, employees would eventually be unable to connect.
