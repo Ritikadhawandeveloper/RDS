@@ -1,0 +1,115 @@
+Understanding the RDS CAL Model – Detailed and Descriptive Explanation (Exam-Oriented)
+Remote Desktop Services (RDS), developed by Microsoft, uses a structured licensing system known as the RDS CAL (Client Access License) model. This model is designed to ensure that only authorized users or devices can access remote desktops and applications hosted on a server. It also helps organizations stay compliant with licensing rules while efficiently managing access.
+
+1. Concept of the RDS CAL Model
+The RDS CAL model is based on the idea that every user or device connecting to a Remote Desktop Session Host must have a valid license. These licenses are managed by a Remote Desktop Licensing Server, which acts as a central authority.
+Detailed Working Process
+When a user or device attempts to connect to a session host, the system first checks whether a license is required.
+If required, the session host communicates with the licensing server.
+The licensing server checks its available pool of licenses.
+If a valid license (CAL) is available, it is issued to the user or device.
+Once the license is assigned, the user is allowed to access the remote desktop or applications.
+👉 In simple terms, the licensing system works like a verification checkpoint, ensuring that only authorized connections are allowed.
+2. Types of RDS CALs (Detailed Explanation)
+There are two main types of RDS CALs, and the choice depends on how users access the system.
+A. Per Device RDS CAL
+Description
+In this model, the license is assigned to a specific physical device rather than a user. Any person using that device can access the remote system.
+Detailed Features
+The license is permanently linked to the device hardware
+It is fully tracked and managed by the licensing server
+It works even if the device is not part of an Active Directory domain
+A temporary license is issued when the device connects for the first time
+Detailed Working Process
+When a device connects for the first time, it receives a temporary license valid for 90 days.
+After successful login and validation, the licensing server upgrades it to a permanent license, provided licenses are available.
+If no permanent license is available, the temporary license continues until it expires.
+Each time the device connects, the server checks the license validity and expiry date.
+Before expiry (within 7 days), the license is automatically renewed for a period of 52 to 89 days.
+Additional Characteristics
+Up to 20% of licenses can be revoked and reassigned
+Over-allocation is not allowed
+Provides strict control over device access
+Use Case
+This model is ideal in environments where multiple users share the same computer, such as:
+Schools and computer labs
+Call centers with shift-based employees
+Public access systems
+B. Per User RDS CAL
+Description
+In this model, the license is assigned to a specific user account rather than a device. The user can connect from multiple devices.
+Detailed Features
+The license is linked to a user in Active Directory
+The same user can access the system from different devices
+Licensing is not strictly enforced by the system
+Administrators are responsible for ensuring compliance
+Detailed Working Process
+When a user connects, a license is assigned from the available pool.
+The license appears to have a validity of 60 days.
+Each time the user logs in, the expiration date is extended by another 60 days.
+If the user does not log in before expiration, the license is removed from the list.
+The next login creates a new license entry.
+Additional Characteristics
+No temporary license mechanism
+Cannot be revoked manually
+Can be over-allocated (risk of license violation)
+Typically reassigned after a minimum of 90 days
+Use Case
+Best suited for environments where:
+Each user has their own personal device(s)
+Employees work remotely or use multiple devices
+3. Detailed Comparison of Per Device vs Per User CALs
+Feature	Per Device CAL	Per User CAL
+Assignment	Device-based	User-based
+Access	Multiple users on one device	One user on multiple devices
+Tracking	Strictly tracked	Less strictly enforced
+Temporary License	Available (90 days)	Not available
+Renewal	Automatic (52–89 days)	Extended on login (60 days)
+Revocation	Allowed (up to 20%)	Not allowed
+Over-allocation	Not possible	Possible
+Best Environment	Shared devices	Individual users
+4. Licensing Grace Period
+When Remote Desktop Services is first installed, there is a 120-day grace period.
+During this time, users can connect without a licensing server.
+After the grace period ends:
+A valid licensing server is required
+Users must have valid CALs to connect
+👉 This grace period allows administrators time to configure licensing properly.
+5. Cross-Domain and Workgroup Licensing
+A licensing server can issue licenses across:
+Multiple Active Directory domains
+Forests
+Workgroup environments
+👉 However, certain limitations exist, especially in tracking per user licenses in workgroups.
+6. License Tracking and Administration
+Administrators use tools like Remote Desktop Licensing Manager to:
+Monitor license usage
+Generate reports
+Ensure compliance with licensing agreements
+👉 This is especially important for per user licensing, where enforcement is not automatic.
+7. RDS CAL Version Compatibility (Very Important)
+Key Rules
+Older licenses cannot be used for newer server versions
+Newer licenses can be used for older server versions
+Example
+A Windows Server 2022 CAL can connect to 2022 or older servers
+It cannot connect to a newer version like 2025
+👉 Compatibility must be checked between:
+CAL version
+Session Host version
+License Server version
+8. License Server Compatibility
+CALs must be installed on a compatible license server
+A license server must support the version of CAL being installed
+👉 Example:
+2022 CALs can be installed on 2022 or earlier compatible servers
+Cannot be installed on incompatible older versions
+9. Practical Use Cases (Combined Understanding)
+Per Device Model
+Schools with shared lab computers
+Offices with shift-based employees
+Public kiosks
+Per User Model
+Corporate offices with personal laptops
+Remote work environments
+Organizations with flexible working setups
