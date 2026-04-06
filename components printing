@@ -1,0 +1,70 @@
+Windows Printing Architecture – Rephrased in Points (Exam-Oriented)
+1. Basic Overview
+Windows printing architecture consists of two main components:
+Print Spooler
+Print Drivers
+The print spooler is the central and most important part of the printing system.
+It is an executable file called spoolsv.exe.
+It starts automatically when the system boots and runs until shutdown.
+2. Functions of Print Spooler
+Decides whether a print job should be processed locally or over a network
+Accepts data from GDI (Graphics Device Interface) along with printer drivers
+Stores print jobs temporarily in a spool file (spooling process)
+Manages the printer queue and selects the next available printer
+Converts data from formats like EMF to printer-compatible formats like PCL
+Sends processed data to the printer hardware
+Maintains printer configuration and settings in the system registry
+3. Structure of Printing System
+If the printer is local, both client and server components are on the same machine
+If the printer is network-based, components are distributed across systems
+4. Main Components of Print Spooler System
+(a) Application
+Creates print jobs using GDI functions
+Example: MS Word, browser
+(b) GDI (Graphics Device Interface)
+Helps applications communicate with printers
+Consists of:
+User-mode (Win32 GDI) → Used by applications
+Kernel-mode (Graphics Engine) → Supports device drivers
+(c) Winspool.drv
+Acts as the client interface to the spooler
+Sends print requests from application to spooler
+(d) Spoolsv.exe
+Main spooler service (API server)
+Manages all printing operations
+(e) Spoolss.dll
+Works as a router
+Determines which print provider to use
+Forwards requests to the correct provider
+5. Print Providers
+Responsible for:
+Sending print jobs to local or remote printers
+Managing print queues (start, stop, list jobs)
+Use standard API functions called by spoolss.dll
+Types of Print Providers
+localspl.dll → Handles local printers
+win32spl.dll → Handles network printers
+nwprovau.dll → Used for Novell NetWare printing
+inetpp.dll → Handles internet (HTTP/URL) printing
+Printer manufacturers can also create custom providers
+6. Print Processors
+User-mode DLL files
+Convert spooled data into a format suitable for printing
+Working
+Read data from spool file
+Convert data into required format
+Send converted data back to spooler
+Default print processor: winprint.dll
+Installed along with printer drivers
+7. Print Monitors
+Responsible for sending print data from spooler to printer hardware
+Types of Print Monitors
+(a) Language Monitor
+Provides bi-directional communication
+Allows printer to send status updates
+Adds control information to print data
+Can perform post-spooling processing
+(b) Port Monitor
+Connects spooler with hardware ports
+Manages and configures printer ports
+Sends data to actual printer device
