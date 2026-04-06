@@ -1,0 +1,51 @@
+Client-Side Rendering vs Server-Side Rendering (Printing) – Descriptive Explanation for Exams
+1. Introduction
+In Windows printing, rendering refers to the process of converting a print job into a format that the printer can understand. This conversion can happen either on the client computer or on the print server, leading to two types:
+Client-Side Rendering (CSR)
+Server-Side Rendering (SSR)
+2. Client-Side Rendering (CSR)
+Definition
+Client-side rendering is a method where the client computer (user’s system) processes and converts the print job into a printer-ready format before sending it to the print server or printer.
+Working
+User gives a print command from their computer
+The client system processes the print job using its local printer driver
+The job is converted into a printer-ready format (like PCL)
+The processed data is sent over the network to the printer or print server
+The printer directly prints the document
+Key Features
+Processing is done on the client machine
+Uses client-side drivers
+Reduces workload on the print server
+Advantages
+Less load on server → better server performance
+Faster printing in distributed environments
+Efficient when many users are printing simultaneously
+Disadvantages
+Requires driver installation on each client system
+Can cause compatibility issues
+Higher processing load on client machines
+Example
+A user prints a document from their laptop, and the laptop itself converts the file before sending it to a network printer.
+3. Server-Side Rendering (SSR)
+Definition
+Server-side rendering is a method where the print server processes and converts the print job into a printer-compatible format.
+Working
+User sends a print command
+The print job is sent to the print server
+The server processes the job using its installed printer drivers
+The server converts the data into printer format
+The server sends the processed data to the printer
+Key Features
+Processing is done on the print server
+Centralized driver management
+Clients do not need full driver installation
+Advantages
+Easier centralized management
+No need to install drivers on every client
+Better compatibility control
+Disadvantages
+High load on print server
+Slower if many users send jobs at the same time
+Single point of failure
+Example
+In an office, all computers send print jobs to a central server, which processes and prints them.
