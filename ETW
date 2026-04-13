@@ -1,0 +1,53 @@
+Event Tracing for Windows (ETW) is a high-performance logging and tracing framework built into the Windows operating system. It is developed by Microsoft to help developers, system administrators, and support engineers monitor system activity, diagnose problems, and analyze performance in real time.
+
+What is Event Tracing for Windows (ETW)?
+ETW is a kernel-level tracing mechanism that allows different components of the operating system and applications to generate detailed event logs. These events provide insights into how the system is functioning internally.
+In simple terms, ETW is used to track what is happening inside the system, such as process execution, disk activity, network usage, and application behavior.
+
+Purpose of ETW
+The primary purpose of ETW is to provide efficient and detailed tracing for:
+Performance analysis
+System diagnostics and troubleshooting
+Debugging applications
+Monitoring system and application behavior
+It is designed to have minimal impact on system performance, even when collecting large amounts of data.
+
+Key Components of ETW
+ETW architecture consists of the following main components:
+1. Event Providers
+These are the sources of events
+They generate and send event data to ETW
+Can be part of the Windows kernel, drivers, or applications
+Examples:
+Operating system components
+Device drivers
+Custom applications
+2. Event Controllers (Sessions)
+Control the tracing process
+Start and stop event tracing sessions
+Specify which providers should generate events
+A session defines:
+What data to collect
+Where to store it
+3. Event Consumers
+Receive and process the event data
+Can display, store, or analyze the events
+Examples:
+Monitoring tools
+Performance analyzers
+4. Event Trace Log Files (.etl)
+Files where event data is stored
+Used for later analysis
+5. ETW Infrastructure
+The core system that manages event flow
+Ensures efficient data collection and delivery
+
+How ETW Works
+ETW operates in a structured sequence:
+A controller starts a tracing session.
+Selected providers begin generating events.
+Events are collected by the ETW system.
+Data is either:
+Sent to real-time consumers, or
+Stored in log files (.etl)
+Consumers analyze the data for insights.
