@@ -1,0 +1,90 @@
+Windows Management Instrumentation (WMI) Architecture refers to the structured design and components through which WMI collects, processes, and provides management data in the Windows operating system. It follows a layered and modular architecture that enables efficient communication between system resources and management applications.
+
+Overview of WMI Architecture
+WMI architecture is based on a client–provider model and is divided into multiple layers. Each layer has a specific role in ensuring that management data flows smoothly from system components to users or applications.
+
+The architecture mainly consists of the following layers:
+
+Management Applications (Clients)
+WMI Infrastructure (Core Services)
+WMI Providers
+Managed Objects and Resources
+
+1. Management Applications (Clients)
+These are the top layer of the WMI architecture. They are the tools or programs that request and use management data.
+Examples include:
+PowerShell scripts
+Command-line tools (like WMIC)
+System management software (e.g., monitoring tools)
+Function:
+Send queries to WMI (e.g., request CPU usage)
+Receive and display results
+Perform administrative actions (start/stop services, etc.)
+These clients use APIs or scripting languages to interact with WMI.
+
+2. WMI Infrastructure (Core Layer)
+This is the central layer of the architecture and acts as a mediator between clients and providers.
+It includes:
+a) WMI Service (Winmgmt)
+The core service that handles all WMI operations
+Receives requests from clients
+Identifies the correct provider
+Returns the results
+b) Common Information Model (CIM)
+A standard data model used to represent system components
+Defines classes such as processes, disks, and operating systems
+Ensures consistency across different systems
+c) WMI Repository
+A database that stores CIM class definitions
+Contains metadata, not actual live data
+Helps WMI understand what information is available
+Function of Infrastructure Layer:
+Processes queries
+Manages communication
+Provides a standardized structure for data
+3. WMI Providers
+Providers form the middle layer and act as data suppliers.
+Each provider is responsible for a specific type of data. For example:
+Hardware provider (CPU, memory)
+Software provider (installed applications)
+Network provider
+
+Function:
+Retrieve real-time data from system components
+Convert it into WMI-compatible format
+Send it back to the WMI service
+Providers are essential because WMI itself does not store live data—it relies on providers to fetch it.
+
+4. Managed Objects and Resources
+This is the bottom layer of the architecture.
+It includes actual system components such as:
+Hardware (CPU, RAM, disks)
+Software (applications, services, drivers)
+System settings and configurations
+These resources are represented as WMI objects, based on CIM classes.
+
+Function:
+Provide real data that users want to access or manage
+Working of WMI Architecture
+The functioning of WMI architecture follows a step-by-step process:
+A client sends a request/query (e.g., get system information).
+The WMI service (Winmgmt) receives the request.
+It checks the WMI repository to understand the class structure.
+It forwards the request to the appropriate provider.
+The provider collects data from system resources.
+The data is returned to the WMI service.
+The WMI service sends the response back to the client.
+
+Key Architectural Features
+Layered Structure: Separates responsibilities for better management
+Modularity: Providers can be added or removed without affecting the whole system
+Standardization: Uses CIM for consistent data representation
+Remote Accessibility: Supports management across networks
+Scalability: Suitable for both small systems and large enterprise environments
+
+Advantages of WMI Architecture
+Enables centralized and efficient system management
+Supports automation through scripting
+Provides real-time access to system data
+Allows remote monitoring and administration
+Reduces complexity through a standardized model
