@@ -1,0 +1,29 @@
+Microsoft Management Console (MMC) is a graphical framework in the Windows operating system that provides a centralized interface for system administration and management tools. It is developed by Microsoft and allows administrators to manage hardware, software, and network components through a unified console.
+What is MMC?
+MMC is a management platform that hosts administrative tools called snap-ins. These snap-ins are small programs that perform specific management tasks, such as managing users, disks, services, or system settings.
+In simple terms, MMC acts as a container or dashboard where multiple administrative tools can be combined and accessed from a single interface.
+Purpose of MMC
+The main purpose of MMC is to:
+Provide a centralized management interface
+Simplify system administration tasks
+Allow customization of management tools
+Improve efficiency by grouping related tools together
+Key Components of MMC
+1. MMC Console
+The main window that displays management tools
+Can be customized and saved for future use
+2. Snap-ins
+Individual management tools added to the console
+Examples include:
+Device Manager
+Disk Management
+Event Viewer
+Services
+3. Console Tree
+Located on the left side
+Displays a hierarchical structure of snap-ins
+4. Details Pane
+Located on the right side
+Shows detailed information about selected items
+5. Action Pane
+Provides available actions for selected objects
