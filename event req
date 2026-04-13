@@ -1,0 +1,57 @@
+Event Forwarding Requirements in Windows define the necessary configurations and conditions that must be met for successful collection of event logs between source computers and a central collector system. This feature is part of the Windows event management framework developed by Microsoft and relies on technologies such as WinRM and the WS-Management protocol for communication.
+Event forwarding operates in two modes—collector-initiated and source-initiated—and each has specific requirements for proper functioning.
+1. Requirements for Collector-Initiated Subscription
+In a collector-initiated subscription, the collector computer initiates the connection and retrieves event logs from source systems.
+Key Requirements:
+1. Administrative Permissions
+The collector system must have administrator access on all source computers to retrieve event logs.
+2. WinRM Configuration
+WinRM must be enabled and configured on both collector and source systems
+Proper listeners (HTTP/HTTPS) must be set up
+3. Network Connectivity
+Reliable network communication between collector and source computers
+Required ports (5985 for HTTP, 5986 for HTTPS) must be open
+4. Firewall Configuration
+Windows Firewall must allow WinRM traffic
+Exceptions should be configured for remote management
+5. Event Log Access
+Source systems must allow remote access to event logs
+Necessary permissions should be granted
+6. Subscription Configuration
+The collector must define:
+Source computer names
+Event types to collect
+Log filters
+7. Time Synchronization
+Systems should have synchronized time to ensure accurate event logging
+2. Requirements for Source-Initiated Subscription
+In a source-initiated subscription, the source computers initiate the connection and send events to the collector.
+Key Requirements:
+1. Group Policy Configuration
+Source computers are configured using Group Policy
+Policy specifies the collector server address
+2. WinRM Configuration
+WinRM must be enabled on both source and collector systems
+Proper listeners must be configured
+3. Event Forwarding Configuration
+Source systems must be configured to forward specific events
+Collector must define subscription settings
+4. Network and Firewall Settings
+Network connectivity must be established
+Required ports (5985/5986) must be open
+Firewall rules must allow communication
+5. Permissions and Authentication
+Proper authentication (Kerberos, NTLM, etc.) must be configured
+Source systems must trust the collector
+6. Subscription Manager Configuration
+The collector must be defined as a subscription manager
+Source systems use this configuration to send events
+7. Scalability Considerations
+Suitable for large environments with many source systems
+Group Policy simplifies configuration across multiple machines
+Common Requirements for Both Types
+WinRM Service must be running on all systems
+WS-Management protocol must be supported
+Proper authentication and security settings must be configured
+Systems must be part of the same domain or have trust relationships (for Kerberos)
+Event Viewer must be available for viewing collected logs
