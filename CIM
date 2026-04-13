@@ -1,0 +1,84 @@
+Common Information Model (CIM) is a standardized framework used to represent and manage information about system components such as hardware, software, networks, and services in a consistent and structured way. It plays a fundamental role in system management technologies like Windows Management Instrumentation (WMI).
+
+What is Common Information Model (CIM)?
+
+CIM is an object-oriented data model that defines how managed elements in an IT environment are described. It provides a common language and structure so that different systems, tools, and applications can understand and share management information easily.
+It is developed and maintained by the Distributed Management Task Force (DMTF), an organization that creates standards for system and network management.
+
+Purpose of CIM
+The main purpose of CIM is to standardize the representation of management data across different platforms and technologies. Its key objectives include:
+Providing a uniform structure for describing system resources
+Enabling interoperability between different management tools
+Simplifying system administration and monitoring
+Supporting automation and remote management
+
+Key Concepts of CIM
+CIM is based on object-oriented principles. Its main concepts include:
+1. Classes
+A class is a blueprint that defines the properties and behavior of a managed resource.
+Example:
+A class may represent a computer system, disk drive, or operating system.
+Each class includes:
+Properties (attributes such as name, size, status)
+Methods (actions such as start, stop, restart)
+2. Objects (Instances)
+Objects are real-world instances of classes.
+Example:
+If “ComputerSystem” is a class, then a specific computer is an object of that class.
+3. Properties
+Properties define the characteristics of a class or object.
+Example:
+CPU speed
+Memory size
+Operating system version
+4. Methods
+Methods define actions that can be performed on objects.
+Example:
+Reboot a system
+Start a service
+5. Inheritance
+CIM supports inheritance, meaning one class can derive from another.
+Example:
+A “DiskDrive” class may inherit from a more general “StorageDevice” class
+This reduces duplication and improves structure.
+
+Structure of CIM
+CIM is divided into three main layers:
+1. CIM Schema
+Defines the overall structure and rules
+Contains a collection of standard classes and relationships
+Acts as a blueprint for all managed elements
+2. CIM Classes
+Represent different types of resources (e.g., systems, networks, applications)
+Organized hierarchically using inheritance
+3. CIM Instances
+Actual data representing real system components
+Created based on CIM classes
+
+How CIM Works
+CIM works by providing a standard model that management systems use to access and exchange information:
+A management application sends a request for system data.
+The request follows the CIM structure and format.
+The system retrieves the relevant data using providers (e.g., in WMI).
+The data is returned in a standardized format defined by CIM.
+This ensures that different tools can interpret the data correctly.
+CIM in Windows (Relation with WMI)
+In Windows, CIM is implemented through Windows Management Instrumentation (WMI):
+WMI uses CIM as its data model
+WMI classes (such as Win32_OperatingSystem) are based on CIM standards
+CIM ensures consistency in how Windows represents system information
+
+Features of CIM
+Platform-independent model
+Object-oriented structure
+Extensible (new classes can be added)
+Supports inheritance and relationships
+Standardized and widely accepted
+Enables interoperability across systems
+
+Advantages of CIM
+Provides a common standard for system management
+Reduces complexity in managing diverse environments
+Improves compatibility between different tools and platforms
+Enables automation and remote administration
+Enhances scalability in enterprise environments
