@@ -1,0 +1,10 @@
+Baseboard Management Controller (BMC) is a specialized hardware component embedded on a computer’s motherboard that provides out-of-band management capabilities for monitoring and controlling a system independently of the main operating system. It is commonly used in servers and enterprise systems to enable administrators to manage and troubleshoot machines even when the system is powered off or the operating system is unresponsive.
+What is BMC?
+A BMC is a microcontroller integrated into the motherboard that operates separately from the main CPU, memory, and operating system. It has its own firmware and network connectivity, allowing it to function independently.
+In simple terms, BMC acts as a remote management system built into the hardware, giving administrators direct access to the system at a low level.
+Purpose of BMC
+The main purpose of BMC is to:
+Enable remote system management and monitoring
+Provide access even when the system is down or crashed
+Support hardware-level control and diagnostics
+Reduce the need for physical access to servers
