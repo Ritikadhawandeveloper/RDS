@@ -1,0 +1,81 @@
+Start VM on Connect
+
+This feature reduces costs by allowing users to turn on their session host VMs only when they need them.Start VM on Connect lets you reduce costs by enabling end users to power on the virtual machines (VMs) used as session hosts only when they're needed. You can then power off VMs when they're not needed.
+
+
+Supported for both personal and pooled sessions.
+
+For personal host pools, Start VM on Connect only powers on an existing session host VM that is already assigned or can be assigned to a user. 
+
+For pooled host pools, Start VM on Connect only powers on a session host VM when none are turned on and more VMs are only be turned on when the first VM reaches the session limit.
+
+
+Requires the "Desktop Virtualization Power On Contributor" role.
+
+The role is assigned on the Subscription (or Host Pool) and assigned to the AVD Service Principal.
+
+Setup can be done via Azure Portal, PowerShell, or CLI.
+
+Preeequisites for start vm on connect :
+
+Prerequisites
+
+Before you can use Start VM on Connect, you need:
+An existing host pool that's associated with an application group and workspace. You can only configure Start VM on Connect on existing host pools. You can't enable it at the same time you create a new host pool.
+The Azure account you use to configure Start VM on Connect must have the Desktop Virtualization Host Pool Contributor role-based access control (RBAC) role assigned.
+Windows App or the Remote Desktop app installed on a local device with a user account assigned to a desktop or application in the application group you can test with.
+Make sure that the name of the host pool, session hosts in that host pool, and the resource group only have ANSI characters.
+
+
+Adding an Existing Standalone VM to a Host Pool
+
+Connect to the VM.
+
+Navigate to Control Panel.
+
+Check for and uninstall any existing AVD agents (RD Bootloader, etc.).
+
+Download the latest AVD agents from the Microsoft public article.
+
+Install the AVD Agent Bootloader followed by the RD Agent Installer.
+
+A Registration Key will be needed during installation; this can be generated from the Host Pool in the Azure Portal.
+
+After successful installation, the VM should appear as a session host in the pool.
+
+VM Health Check Parameters
+
+The following parameters are checked to ensure the health of a session host:
+
+Domain joined check
+
+Domain Trust check
+
+SxS (Side-by-Side) Stack Listener check
+
+Monitoring Agent check
+
+Metadata check
+
+App Attach health check
+
+URL accessible check
+
+FSLogix health check
+
+
+Creating start vm on connect
+
+To configure Start VM on Connect using the Azure portal:
+Sign in to the Azure portal.
+In the search bar, enter Azure Virtual Desktop and select the matching service entry.
+Select Host pools, then select the name of the host pool where you want to enable the setting.
+Select Properties.
+In the configuration section, set Start VM on connect to Yes to enable it, or No to disable it.
+Select Save to apply the settings.
+
+
+
+
+
+
