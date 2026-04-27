@@ -1,0 +1,207 @@
+What is App Attach?
+
+• App Attach enables you to dynamically attach applications from an application package to a user session in AVD.
+
+• Applications are not installed locally on Session Host or image (OS image), making it easier to manage custom images for the Session Host, reducing operational overhead and cost for the organizations.
+
+• Applications run within containers with separate user data, the operating system, and other applications, increasing security and making them easier to troubleshoot.
+
+Key Benefits of App Attach
+
+• Applications are delivered using RemoteApp or as part of a desktop session.
+
+• Permissions are applied per application and per user, allowing greater control over which applications users can access in a remote session.
+
+• The same application package can be used across multiple host pools.
+
+• Applications can run on any session host running a Windows client operating system in the same Azure Region as the application package.
+
+• Applications can be upgraded to a new application version with a new disk image without the need for a maintenance window.
+
+• Users can run multiple versions of the same application concurrently on the same session host.
+
+Supported Application Package and File Formats
+
+• MSIX and MSIX bundle (.msix, .msixbundle
+
+• Appx and Appx bundle (.appx, .appxbundle)
+
+• App-V (.appv)
+
+What is MSIX app attach?
+
+MSIX app attach is microsoft's application layering technology, designed for AVD which uses the new MSIX package format to seperate applications from the core operating system and deliver applications to user dynamically.
+
+MSIX App Attach Features
+
+• Removes need of Repackaging: It uses streaming technology to optimize bandwidth by only downloading the difference between an existing package and an upgrade.
+
+• Creates Separation: The application lives inside a virtual application container, which ensures strict isolation between the application and the operating system.
+
+• Supports Silent Installation: Capturing products is performed similarly to MSI packaging. MSIX supports converting .exe installers and MSI packages unattended.
+
+• OS remains unmarked: Once the application is de-staged, no trace file is left within the system (like the application was never there).
+
+• Reduces Time: It takes less time for a user to login.
+
+• Reduces Infrastructure Requirements and Cost.
+
+Requirements of MSIX App Attach
+
+• AVD Deployment
+
+• Windows 10/11 Single or multi-session
+
+• Network Share (Azure Files, Azure NetApp Files, Storage Account)
+
+• Must have NTFS Read permission (SMB Reader)
+
+• MSIX packaging tool
+
+• MSIX MGR.exe (tool)
+
+• Internal or External certificate with certificate name = organization name as required for the MSIX package.
+
+Notes & Best Practices
+
+• It is recommended to create one file share per host pool.
+
+• It is not recommended to use file share with multiple host pools.
+
+• It is recommended to use NetApp files.
+
+• For MSIX app attach, we can use CIMFS (Composite Image File System), VHDX, or VHD.
+
+• CIMFS is recommended as it is faster than VHD/VHDX and consumes less CPU and memory.
+
+• It is recommended to use CIMFS if using Windows 11.
+
+• A CIMFS image is a combination of several files: one file has the .cim extension and contains metadata, together with at least two other files (one starting with object_id and another starting with region_) that contain actual application data.
+
+RBAC Role Assignment (Storage)
+
+RBAC Rules with Azure Files in Entra ID Scenario
+
+• Role: Reader and Data Access
+
+• To: Azure Virtual Desktop and Azure Virtual Desktop ARM Provider Service Principals
+
+RBAC Rules with Active Directory Domain Service Join Scenario
+
+• Role: Storage File Data SMB Share Reader (NTFS Permissions)
+
+• To: Computer Object
+
+Terminology
+
+• Expanding MSIX: Taking an MSIX package output for conversion and making it an app attach package.
+
+• Staging: Making an app attach package available on VM.
+
+• Registering: Making a staged app attach package available for the user.
+
+• Delayed Registration: Delay loading until user starts app.
+
+
+Application registration
+
+App Attach mounts disk images or App-V packages containing your applications from a file share to a user's session during sign-in, then a registration process makes the applications available to the user. There are two types of registration:
+
+On-demand(delayed): applications are only partially registered at sign-in and the full registration of an application is postponed until the user starts the application. On-demand is the registration type we recommend you use as it doesn't affect the time it takes to sign-in to Azure Virtual Desktop. On-demand is the default registration method.
+
+Log on blocking(Register at logon): each application you assign to a user is fully registered. Registration happens while the user is signing in to their session, which might affect the sign-in time to Azure Virtual Desktop.
+
+MSIX application state App Attach
+
+Active state : MSIX package set to active nakes application avaialble to users
+
+Inactive state : MSIX package sets to inactive are ignored by AVD or are not added when user sigin .
+
+MSIX terminology in details:
+
+Expanding an MSIX package is a multi-step process that involves taking the .msix file and putting its content into a VHD(X) or CIM file.
+
+Steps for Expanding
+
+• Obtain an MSIX package (.msix file).
+
+• Rename the .msix file to .zip.
+
+• Unzip the resulting file to a folder.
+
+• Create a VHD with size equal to the size of the folder.
+
+• Mount the VHD.
+
+• Initialize a disk.
+
+• Create a partition.
+
+• Format the partition.
+
+• Copy the unzipped content into the VHD.
+
+• Use MSIXMGR to apply ACLs on the content of the VHD.
+
+• Unmount the VHD(X)/CIM.
+
+Staging 
+
+Staging involves two steps:
+
+1. Mounting the VHD(X)/CIM to the VM.
+
+2. Notifying the OS that the MSIX package is available for registration by mounting the apps to the Host pool (Session Host).
+
+Registration 
+
+Registration is on a per-user basis and is required for each user. There are two types:
+
+1. Regular Registration: Application assigned to a user is fully registered.
+
+2. Delayed Registration: Each application assigned to a user is partially registered.
+
+
+• Deregister: Removes a registered but non-running MSIX package for a user. Occurs during user sign-out; application data specific to the user is pushed to the local user profile.
+
+• Destage: Notifies the OS that an MSIX package or application currently isn't running and is not staged for any user. Once unmounted, all references to it are removed from the OS.
+
+
+MSIX Package Structure
+
+• Package Payload: Application files 
+
+App Payload: The payload files are the appcode files and assets when building the image (icon).
+
+• Footprint Files:
+
+  • AppxBlockMap.xml: The package blockmap is an xml file which Contains a list of application files, indexes, and hashes for each block of data stored in a pacakge . Secured with a digital signature.
+
+  • AppxManifest.xml:The pacage manifest Contains info needed to deploy, display, and update the app (identity, dependencies, etc.).
+
+  • AppxSignature.p7x:  This file is Generated when the package is signed; all packages must be signed before you run them (validation).
+ 
+• Code Integrity: MSIX code integrity ensures app security and tamper-protection through cryptographic signatures. It uses AppxSignature.p7x (digital signature), AppxBlockMap.xml (file hashes), and AppxMetadata\CodeIntegrity.cat (catalog of PE files) to validate that files haven't been altered. 
+
+
+MSIX App Attach Connection Process
+
+1. User authenticates against Azure AD and obtains AVD feed.
+
+2. RD Broker works with RD Gateway and RD Agent to orchestrate a connection to a VM.
+
+3. VM initiates creation of user session and FSLogix 'brings' the user profile.
+
+4. RD Agent is notified which MSIX packages must be registered.
+
+5. RD Agent registers MSIX packages.
+
+6. Session establishment is completed.
+
+Image Creation Steps
+
+1. Get MSIX: This step involves acquiring  the MSIX pacakge , which is the modern Windows application  packaging format that provides a contemporary way to package and distribute windows app.
+
+2. Expand MSIX into VHDX: In this step, the obatined MSIX pacakge is expanded into a virtualized hard disk (VHD) format.This process essentially converts the application pacakge into virtualization state ready for deployment.
+
+3. Upload VHDX to File Share:  The final step involves uploading the created VHD into file shared. This enables the distribution and accessbility of application across the network U
