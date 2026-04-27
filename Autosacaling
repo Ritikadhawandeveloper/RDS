@@ -1,0 +1,59 @@
+Autoscale in Azure Virtual Desktop
+
+Autoscale lets you scale your session host Virtual Machines (VMs) in a host pool up or down according to a schedule to optimize deployment costs (by turning session hosts on and off).
+
+How to Create a Scaling Plan
+
+Create a Resource: Go to the Marketplace.
+
+Scaling Plan: Search for and validate the AVD resource.
+
+Create the Scaling Plan:
+
+Go to Basics and add all required settings.
+
+Select the type of host pool (Pooled or Personal).
+
+Schedule the Autoscale:
+
+Define Schedule Name, Timezone, and Repeat days.
+
+Configure the phases:
+
+Ramp-up
+
+Peak hours
+
+Ramp-down
+
+Off-peak hours
+
+Host Pool Assignment: Assign to the desired host pool.
+
+Tags: Add metadata if required.
+
+Review + Create.
+
+Key Concepts & Rules for Scaling Plans
+
+Availability: Dynamic autoscaling is only available in Azure and is not supported in Azure Government.
+
+Flexibility: A scaling plan can have multiple schedules.
+
+Assignment Rules:
+
+Multiple host pools can use the same scaling plan, provided they are in the same Resource Group.
+
+A host pool can have only one scaling plan assigned to it at a time.
+
+Troubleshooting: Diagnostic logs can be enabled for scaling plans to assist with troubleshooting.
+
+Permissions: To assign a scaling plan, the "Desktop Virtualization Power On/Off Contributor" role must be assigned to the AVD Service Principal on the subscription.
+
+Types of Autoscaling
+
+Power Management Autoscaling: Powers session hosts on and off to adjust to available capacity in a host pool.
+
+Dynamic Autoscaling (Preview): Powers session hosts on/off AND creates/deletes session hosts to adjust capacity.
+
+Note: If using personal desktop autoscale with Hibernation, you must enable the hibernation feature on session hosts. FSLogix and App Attach currently do not support hibernated states.
