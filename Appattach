@@ -204,4 +204,8 @@ Image Creation Steps
 
 2. Expand MSIX into VHDX: In this step, the obatined MSIX pacakge is expanded into a virtualized hard disk (VHD) format.This process essentially converts the application pacakge into virtualization state ready for deployment.
 
-3. Upload VHDX to File Share:  The final step involves uploading the created VHD into file shared. This enables the distribution and accessbility of application across the network U
+3. Upload VHDX to File Share:  The final step involves uploading the created VHD into file shared. This enables the distribution and accessbility of application across the network allowing users to access and install the application from centralized location .
+
+
+
+
