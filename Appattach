@@ -206,6 +206,60 @@ Image Creation Steps
 
 3. Upload VHDX to File Share:  The final step involves uploading the created VHD into file shared. This enables the distribution and accessbility of application across the network allowing users to access and install the application from centralized location .
 
+Flow diagram of MSIX poacakging 
+
+MSIX App Attach Connection Diagram
+
+• Stage
+
+• Registration
+
+• User Logout
+
+• Deregister -> User Profile
+
+• Destage
+
+Diagram Flow:
+
+1. .Zip,.exe file -> MSIX Packaging tool -> MSIX Package
+
+2. MSIX Package -> msixmgr (Expanding) -> MSIX app attach image
+
+3. MSIX app attach image -> upload (File Share)
+
+4. File Share -> AVD (Permissions)
+
+---
+
+Dynamic Staging and Destaging in MSIX App Attach
+
+MSIX app attach defines staging as an operation that:
+
+• Mounts an MSIX image from MSIX file share.
+
+• Passes the context of MSIX image so relevant OS components can be verified that an MSIX package application is available.
+
+• Dependencies are evaluated.
+
+MSIX app attach defines destaging as an operation that:
+
+• Removes references in the OS to the MSIX packaged application.
+
+• Unmounts an MSIX image from MSIX file share.
+
+Key Points:
+
+• Only MSIX packages with state set to active are staged.
+
+• Staging happens per session host.
+
+• Staging an MSIX package does not grant user permissions to the MSIX application.
+
+• When staging fails, for any reason, the session host status will become unavailable. The status will remain until the issue blocking staging is resolved or MSIX package is removed from host pool.
+
+• Staged CIM packages do not appear in MSIX Management tool, only VHD(X)s do.
+
 
 
 
