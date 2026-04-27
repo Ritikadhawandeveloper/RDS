@@ -1,0 +1,87 @@
+RDP Shortpath 
+
+
+RDP Shortpath establishes a UDP-based transport between a local device Windows App or the Remote Desktop app on supported platforms and session host in Azure Virtual Desktop. 
+
+By default, the Remote Desktop Protocol (RDP) begins a TCP-based reverse connect transport, then tries to establish a remote session using UDP. 
+
+If the UDP connection succeeds the TCP connection drops, otherwise the TCP connection is used as a fallback connection mechanism.
+
+UDP-based transport offers better connection reliability and more consistent latency. 
+
+TCP-based reverse connect transport provides the best compatibility with various networking configurations and has a high success rate for establishing RDP connections.
+
+RDP Shortpath can be used in two ways:
+
+Managed networks, where direct connectivity is established between the client and the session host when using a private connection, such as Azure ExpressRoute or a site-to-site virtual private network (VPN).
+
+A connection using a managed network is established in one of the following ways:
+
+A direct UDP connection between the client device and session host, where you need to enable the RDP Shortpath listener and allow an inbound port on each session host to accept connections.
+
+A direct UDP connection between the client device and session host, using the Simple Traversal Underneath NAT (STUN) protocol between a client and session host. Inbound ports on the session host aren't required to be allowed.
+
+Public networks, where direct connectivity is established between the client and the session host when using a public connection. 
+
+There are two connection types when using a public connection, which are listed here in order of preference:
+
+A direct UDP connection using the Simple Traversal Underneath NAT (STUN) protocol between a client and session host.
+
+An relayed UDP connection using the Traversal Using Relay NAT (TURN) protocol between a client and session host.
+
+To enable RDP shortpath for managed network you must enable a UDP listner on the session host (on port 3390) and it can be changed to use a differnt port.
+
+Path of udp shortpath : HOstpool->settings->networking-> RDP shortpath 
+
+Key benefits
+
+Using RDP Shortpath has the following key benefits:
+
+Using URCP to enhance UDP achieves the best performance by dynamically learning network parameters and providing the protocol with a rate control mechanism.
+Higher throughput.
+
+When using STUN, the removal of extra relay points reduces round-trip time improves connection reliability and the user experience with latency-sensitive applications and input methods.
+
+
+
+Connection flow:
+
+Managed network :
+
+Connection sequence
+
+All connections begin by establishing a TCP-based reverse connect transport over the Azure Virtual Desktop Gateway. Then, the client and session host establish the initial RDP transport, and start exchanging their capabilities. These capabilities are negotiated using the following process:
+
+The session host sends the list of its IPv4 and IPv6 addresses to the client.
+
+The client starts the background thread to establish a parallel UDP-based transport directly to one of the session host's IP addresses.
+
+While the client is probing the provided IP addresses, it continues to establish the initial connection over the reverse connect transport to ensure there's no delay in the user connection.
+
+If the client has a direct connection to the session host, the client establishes a secure connection using TLS over reliable UDP.
+
+After establishing the RDP Shortpath transport, all Dynamic Virtual Channels (DVCs), including remote graphics, input, and device redirection, are moved to the new transport. However, if a firewall or network topology prevents the client from establishing direct UDP connectivity, RDP continues with a reverse connect transport.
+
+Connection flow for public network :
+
+All connections begin by establishing a TCP-based reverse connect transport over the Azure Virtual Desktop Gateway. Then, the client and session host establish the initial RDP transport, and start exchanging their capabilities. If RDP Shortpath for public networks is enabled on the session host, the session host then initiates a process called candidate gathering:
+
+The session host enumerates all network interfaces assigned to a session host, including virtual interfaces like VPN and Teredo.
+
+The Windows service Remote Desktop Services (TermService) allocates UDP sockets on each interface and stores the IP:Port pair in the candidate table as a local candidate.
+
+The Remote Desktop Services service uses each UDP socket allocated in the previous step to try reaching the Azure Virtual Desktop STUN Server on the public internet. Communication is done by sending a small UDP packet to port 3478.
+
+If the packet reaches the STUN server, the STUN server responds with the public IP and port. This information is stored in the candidate table as a reflexive candidate.
+
+After the session host gathers all the candidates, the session host uses the established reverse connect transport to pass the candidate list to the client.
+
+When the client receives the list of candidates from the session host, the client also performs candidate gathering on its side. Then the client sends its candidate list to the session host.
+
+After the session host and client exchange their candidate lists, both parties attempt to connect with each other using all the gathered candidates. This connection attempt is simultaneous on both sides. Many NAT gateways are configured to allow the incoming traffic to the socket as soon as the outbound data transfer initializes it. This behavior of NAT gateways is the reason the simultaneous connection is essential. If STUN fails because it's blocked, a relayed connection attempt is made using TURN.
+
+After the initial packet exchange, the client and session host may establish one or many data flows. From these data flows, RDP chooses the fastest network path. The client then establishes a secure connection using TLS over reliable UDP with the session host and initiates RDP Shortpath transport.
+
+After RDP establishes the RDP Shortpath transport, all Dynamic Virtual Channels (DVCs), including remote graphics, input, and device redirection move to the new transport.
+
+
