@@ -1,0 +1,272 @@
+Policy Templates
+
+FSLogix.admx and FSLogix.adml are both included in the installer zip file.
+
+Copy .admx into C:\Windows\PolicyDefinitions
+
+Copy .adml into C:\Windows\PolicyDefinitions\en-US
+
+After fslogix will install four user groups are created :
+
+1. Fslogix ODFC Exclude list
+2.Fslogix ODFC Include List
+3. Fslogix profile exclude list 
+4. Fslogix profile include list 
+
+Profile Type
+
+i/ 0 -> Normal Profile behavior
+
+ii/ 1 -> RW (machine should only be RW)
+
+iii/ 2 -> RO (machine should only be Readonly)
+
+iv/ 3 -> Machine will try to take RW role.
+
+If it can't, it should fallback to a RO role.
+
+
+Disk compaction
+
+VHD Disk compaction is a process that runs every time a user sign out. The compaction process is designed to automatically decrease the amount of storage a user's container, depending on a predefined threshold.
+
+VHD Disk compaction is enabled by default, if you want to disable it.,
+
+Dependency
+
+VHD Disk compaction depends on optimize Drives service (defragsvc)
+
+Requirements of Disk Compaction
+
+Use dynamically expanding Virtual hard disk (VHDX) fixed size Virtual hard disk cannot be compacted.
+
+disk compaction should be enabled (default it is enabled)
+
+Size of the container must be greater than 1GB (size on disk).
+
+FSLogix Workflow / connectionflow
+
+User logs in to the Windows Machine with FSLogix installed and configured.
+
+If the user has correct permission (Read/write), FSLogix Agents reads through the FSLogix configuration and checks VHD location.
+
+If the user has correct permission (Read/write), the VHD(x) is dynamically attached/mounted to the machine.
+
+The user profile is immediately available and appears in the system and behaves like a local profile.
+
+After user logout the VHD is detached / unmounted gracefully ready to be attached the next time user logs in
+
+Others Profile Solutions	                                FSLogix Profile
+1. Uses Copy/paste to provide the user profile	1. Uses mount/unmount to dynamically attach the profile container.
+2. Slower to load user profile.	                 2. Faster to load user profile
+3. Could be platform limited	                  3. Can be used on any platforms (AVD, RDS, Citrix).
+4. Limited scalability	                         4. Highly scalable.
+5. Office data redirection might be unavailable.	5. Office data redirection is available.
+6. Concurrency is not supported	                   6. Concurrency is supported.
+7. Could be complicated to configure	             7. Easy to configure
+
+FSLogix Modules
+
+i/ Profile container
+
+ii/ ODFC container
+
+iii/ App Rules (App Masking)
+
+What is FSLogix App Rule set?
+
+Ruleset files are a collection of rules that show, hide, redirect, or customize specific aspects of registry, file system.
+
+These Ruleset files are created by the FSLogix Apps RuleEditor and are processed by FSLogix Apps Service (frxsvc).
+
+Types of Rules
+
+Apprules are of three types:
+
+i/ Hiding rule.
+
+ii/ Redirection rule.
+
+iii/ Specify value Rule.
+
+Hiding Rule
+
+A Hiding rule hides specific items from a user or group of users. Hiding rules can apply to files, folders, registry keys, Registry values, printers or fonts.
+
+Redirection Rule
+
+Redirection rules allows IT administrators to redirect non-profile or other specific data into user profile container.
+
+So, it's available on subsequent sign ins regardless of which virtual machine they sign into.
+
+Specify value rule
+
+The specify value rule will, at signin, set a registry value for a specific user or group of users.
+
+This rule is most commonly used when users need HKLM-based registry key values to change based on which users are signing in.
+
+Note: FSLogix Apps Rule set assignments don't support Microsoft Entra ID cloud-only acco
+
+Application rule sets are assigned to following entities:
+
+user,group,Process,Network locations (IP address),Computer,Directory container (distinguished name),Environment Variable.
+
+Newly created rules automatically have the Everyone group assigned with the Applies setting configured to NO.
+
+There can be multiple assignments created in one Rule set.
+
+The Rule set is applied from top to bottom.
+
+Basic Troubleshooting for profile container
+
+Profile container:
+
+check local group membership (Exclude or include group)
+
+check the registry settings for "enabled" and VHD location (CCD location)
+
+HKLM\SOFTWARE\FSLOGIX\PROFILE
+
+check to ensure the correct permissions are assigned to the user on the fileshare.
+
+   the VHD location should be accessible by the user(RW).
+
+check if a local profile doesn't already exists for a user.
+
+check if the user doesn't have a disconnected session.
+
+check the profile logs in %Programdata%\FSLogix\Logs\Profile.
+
+ODFC Container
+
+check local group membership (Exclude or include group)
+
+check the registry setting for "enabled", and VHD location (FCD location)
+
+HKLM\Software\Policies\FSLogix\ODFC
+
+check to ensure the correct permissions are assigned to the user on fileshare.
+
+   the VHD location should be accessible by the user(RW).
+
+check windows search service is running.
+
+Validate the outlook GPO settings
+
+check the ODFC log files at %Programdata%\FSLogix\Logs\ODFC
+
+FSLogix Deployment
+
+i/ onpremise
+
+On supported windows machine install FSLogix using FSLogix Appsetup.
+
+configuring can be possible into two ways:
+
+i/ GPO
+
+ii/ Registry
+
+If using GPO for configuration (FSLogix), we need to add the FSLogix.admx and FSLogix.adml files to the %sysvol%\PolicyDefination and %sysvol%\PolicyDefination\en-US respectively.
+
+This will add the policy template to the local group policy.
+
+Create a File share and share with users (allow Read/write).
+
+Configure below GPOs:
+
+Enabled : Set to Enabled and select Enabled.
+
+VHD location : Set to Enabled and specify the path of the file share.
+
+(e.g: \Fileserver.domain.com\fileshare).
+
+Set optional GPOs such as:
+
+Delete local Profile when VHD should apply
+
+Volume Type
+
+Prevent login with Temp Profile.
+
+Prevent login with failure
+
+Size in MB.
+
+(Also: VHD Location and ProfileType)
+
+Ensure that the user is member of the "FSLogix Profile include Group" in the local user groups (By default Everyone is added)
+
+  It is recommended to add the Administrators to the "FSLogix Profile Exclude group" for Troubleshooting purpose.
+
+Login to the configured windows machine using the account added to the FSLogix include group.
+
+User should have FSLogix Profile created and loaded.
+
+~~AVD [Entra]~~
+
+ii/ AVD [Entra-joined]
+
+1/ On the session host, install the FSLogix Apps using the FSLogix App setup.
+
+2/ FSLogix can be configured in two ways:
+
+i/ GPO
+
+ii/ Registry
+
+3/ If using GPO to configure FSLogix, we need to add the FSLogix.admx and FSLogix.adml files to the %sysvol%\PolicyDefination and %sysvol%\PolicyDefination\en-US respectively.
+
+   This will add the policy template to the local group policy.
+
+4/ Create a storage account and a File share within the storage account.
+
+  Using Access control from the file share assign below RBAC role to the users.
+
+ Role: SMB Share Contributor
+
+5/ Configure below GPOs (Required):
+
+  eNABLED :set to enabled and select enabled
+
+  VHDLocation : Set to Enabled and specify the path of the file share (e.g., \storageaccountname.file.core.windows.net\fileshare).
+
+-6- Set optional GPOs such as:
+
+Delete local profile when VHD should apply.
+
+Volume Type
+
+Prevent login with Temp profile.
+
+Prevent login with failure.
+
+Size in MB.
+
+Ensure that the user is member of the "FSLogix Profile Include Group" in the local user groups (By default Everyone is added)
+
+  It is recommended to add the Administrators to the "FSLogix Profile Exclude group" for Troubleshooting purpose.
+
+8. Login to the Configured windows machine using the account added.~~
+
+Login to the AVD using the Windows App.
+
+User should have FSLogix profile created and loaded.
+
+
+Application Rule Set
+
+o When you create a Rule, two files are created (.fxr) and assignment (.fxa) files.
+
+o Rules and assignment files are placed in %ProgramFiles%\FSLogix\Apps\Rules.
+
+o you need to copy the rules to every virtual machine where you want it applied.
+
+
+
+
+
+
+
+Enabled : Set to Enabled and Select Enabled.
+
