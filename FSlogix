@@ -1,0 +1,197 @@
+Fslogix 
+
+FSLogix is a type of user profile solution which enhances and enables a consistent experience for Windows user profiles in virtual desktop computing environments. FSLogix is not limited to virtual desktop environments; it could be used on a physical desktop where a more portable user experience is desired.
+
+Functions of FSLogix
+
+Roam user data between remote computing session hosts.
+
+Minimize sign-in times for VM environment.
+
+Optimize File I/O.
+
+Provide a local profile experience.
+
+Simplify the management of apps and gold images.
+
+
+Why We Prefer FSLogix?
+
+Filter driver masks the folder where VHD is mounted.
+
+Behaves as if it's locally-mounted, avoiding the problem introduced by using junction points.
+
+Enables the use of Teams and OneDrive.
+
+FSLogix Containers support concurrent sessions.
+
+Eligibility
+
+You are eligible to use FSLogix if you have following licenses:
+
+Microsoft 365 E3/E5
+
+Microsoft 365 A3/A5 / Student use benefits
+
+Microsoft 365 F1/F3
+
+Microsoft 365 Business
+
+Windows 10 Enterprise E3/E5
+
+Windows 10 Education A3/A5
+
+Remote Desktop Services (RDS) Client Access License (CAL)
+
+Remote Desktop Services (RDS) Subscriber Access License (SAL)
+
+Azure Virtual Desktop per-user access license
+
+Supported OS
+
+Windows 11 - Single session or multi-session
+
+Windows Server 2016, 2019, 2022, 2025
+
+Container Types
+
+FSLogix has two primary container types: Profile Container and Office Container.
+
+Profile Container
+
+A profile container is all the data related to a user's profile, which is directly stored in VHD(X).
+
+It's a full remote profile solution for non-persistent environments.
+
+Redirects the entire user profile to the remote location.
+
+Its configuration defines how and where the profile is redirected.
+
+The entire profile except "Redirection.XML" is included in the profile container.
+
+Profile container includes all the benefits of office container.
+
+Profile container VHD(X) will contain the entire windows profile for the user except for:
+
+The temp folder location
+
+The IE (Internet Explorer) crash folder location
+
+Note: Exclusions are done with a "Redirection.XML" file.
+
+ODFC Container (Office Data File Container)
+
+An ODFC container is a container type which is focused on storing profile content that is unique to Microsoft Office applications.
+
+Office container redirects only areas of the profile that are specific to Microsoft Office apps.
+
+A Default ODFC container includes:
+
+Office Activation
+
+Outlook
+
+Outlook personalization
+
+SharePoint
+
+OneDrive
+
+Skype for Business (legacy support)
+
+Note: ODFC containers are an optional configuration.
+
+Components & Installation
+
+Main app installation directory: C:\Program Files\FSLogix\Apps
+
+Agent Components
+
+FRX.exe: This is the command line utility.
+
+Services
+
+FRXSVC.exe: Service that communicates with the command line tool, the drivers, and monitors the rule folder for changes.
+
+FRXCCDS.exe: Service responsible for handling cloud cache operations.
+
+Drivers
+
+frxdrv.sys: This driver is responsible for handling file system and registry requests to make hiding and redirection work.
+
+frxdrvvt.sys: This driver provides the advanced redirection capabilities for profile and ODFC containers.
+
+frxccd.sys: It is responsible for handling cloud cache.
+
+Prerequisites for FSLogix
+
+Should be on supported Windows OS (Windows 10, 11, Server 2016, 2019, 2022, 2025).
+
+Eligible licenses (Windows 11 E3, E5, A3, A5, RDS CALS).
+
+User should have access to the storage provider:
+
+\\(Server-name).contoso.com\(share-name) for local machine.
+
+\\(storage-account-name).file.core.windows.net\(share-name) for Azure.
+
+Configure Antivirus file & folder exclusions.
+
+Note: Antivirus products are known to conflict with FSLogix containers & requires that specific files & folders are excluded from any type of scanning.
+
+Cloud Cache
+
+Used for High Availability environment.
+
+Location (Registry/Policy): CCDLocations.
+
+Cloud cache is a feature that works with Profile and ODFC containers to provide resiliency and high availability.
+
+Registry Paths:
+
+Profile: HKLM\Software\FSLogix\Profile
+
+ODFC: HKLM\Software\Policies\FSLogix\ODFC
+
+Note: CCDLocations and VHD locations must not be present at the same time.
+
+Cloud cache settings are only valid when used with CCDLocations in either profiles or ODFC configuration.
+
+Logs & Group Policy
+
+Log Path: C:\ProgramData\FSLogix\Logs
+
+By default, logging is enabled for all log files.
+
+Registry path for login: HKLM\Software\FSLogix\Logging
+
+User Groups
+
+After FSLogix installation, four user groups are created:
+
+FSLogix ODFC Exclude List
+
+FSLogix ODFC Include List
+
+FSLogix Profile Exclude List
+
+FSLogix Profile Include List
+
+Profile Type Settings
+
+0: Normal profile behavior
+
+1: Machine should only be the RW profile instance
+
+2: Machine should only be RO profile instance
+
+3: Machine should try to take the RW role and if it can't, it should fallback to RO Role.
+
+Policy Templates
+
+FSLogix.admx and FSLogix.adml are both included in the installer zip file.
+
+Copy .admx into C:\Windows\PolicyDefinitions
+
+Copy .adml into C:\Windows\PolicyDefinitions\en-US
+
