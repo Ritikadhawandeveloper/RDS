@@ -1,0 +1,89 @@
+Cloud Cache is an FSLogix feature that provides **high availability and resiliency** for Profile and ODFC containers by maintaining a **local copy of the user profile on the virtual machine** and synchronizing it with one or more **remote storage providers**. It ensures uninterrupted user access during temporary storage or network issues and can support **Business Continuity and Disaster Recovery (BCDR)** across regions, though it increases local **I/O and storage requirements**.
+
+It works by creating a **local cache (VHD file)** during the first sign-in, where user data is stored and accessed. On subsequent sign-ins, the system reuses the existing cache or creates a new one if needed. Data not available locally is fetched from a remote provider (**hydrate**), while all changes are written back to every provider (**flush**). If providers go out of sync, a **clone operation** ensures consistency. Even if remote storage becomes unavailable, the local cache continues to function, though failure to retrieve required data may cause session issues.
+
+Cloud Cache also uses **queue and index files** to track and store changes, a **proxy file** to handle I/O operations, and auxiliary files like the **lock file** (for session ownership) and **meta file** (for tracking the latest data). Storage providers are accessed based on priority, with one used for reading and all used for writing. Overall, Cloud Cache improves reliability, data consistency, and user experience in virtual desktop environments when properly configured.
+
+
+
+or 
+
+Cloud Cache is a feature of FSLogix that works with Profile and ODFC containers to provide **high availability and resiliency** for user profiles. It creates a **local cache of the user’s container on the virtual machine**, which is continuously synchronized with one or more **remote storage providers**. This ensures that users are protected from temporary storage or network issues and can continue working without interruption. It can also be used as part of **Business Continuity and Disaster Recovery (BCDR)** strategies when multiple regions are involved. However, Cloud Cache increases **I/O operations and local storage requirements** on the virtual machine.
+
+Key Considerations of Cloud Cache
+
+* Storage providers are configured using **CCDLocations** and accessed in order of **proximity and preference**.
+* Only **one provider is used for reading (hydration)** at a time.
+* Data is **written to all configured storage providers** simultaneously.
+* Storage performance (latency, bottlenecks) directly affects synchronization.
+* Delays in syncing may indicate a **slow or underperforming storage provider**.
+* Network tests like ping do not accurately reflect real storage performance.
+
+Cloud Cache Components
+
+1. Local Cache
+
+* A local VHD file is created on the virtual machine (default path: `C:\ProgramData\FSLogix\Cache`).
+* During first sign-in:
+
+  * FSLogix creates the container and sets up profile redirection.
+  * User profile is loaded into the local cache.
+* During subsequent sign-ins:
+
+  * Existing local cache is reused if available.
+  * If not, a new cache and proxy file are created.
+* Helps maintain user sessions even if remote storage is temporarily unavailable.
+
+2. Cache Objects
+
+Queue Files (*.queue)**: Track pending operations not yet written to storage.
+Index Files (*.index)**: Store block-level changes to be written to cache and providers.
+
+3. Remote Storage Providers
+
+* Store **full copies of the user profile container**.
+* Used for data access and synchronization across sessions.
+* If all providers fail, the **local cache continues functioning** until recovery.
+* Failure to read from providers may cause **session hang or system crash (BSOD)**.
+
+key Operations**
+
+hydrate (Read Operation)
+
+* Data is fetched from one remote provider when not available in local cache.
+* Happens during sign-in and normal file access.
+
+flush (Write Operation)**
+
+Occurs in three ways:
+
+1. Asynchronous flush**: Data written to all providers simultaneously.
+2. During sign-out**: User sign-out may delay until all providers are updated.
+3. After failure recovery**: Queued changes are flushed once providers are healthy.
+
+Clone Operation
+
+* Occurs when storage providers are out of sync.
+* A full copy of the container is created to ensure consistency across all providers.
+
+Proxy File
+
+* A virtual file representing the user’s container (e.g., `Profile_username.vhd`).
+* Handles all I/O operations and buffering.
+* Appears large but **does not store actual data**.
+
+Auxiliary Files
+
+Lock File
+
+  * Determines which virtual machine owns the container.
+  * Important for **multiple concurrent sessions**.
+
+Meta File
+
+  * Maintains container state and sequence numbers.
+  * Helps identify the **most up-to-date storage provider**.
+
+
+* It relies on external storage systems (e.g., Azure Files, NetApp, etc.) to store profile containers.
+
